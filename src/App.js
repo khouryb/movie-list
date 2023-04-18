@@ -42,6 +42,7 @@ function App() {
     setMovie([])
   }
 
+
   return (
     <div className="App">
       <h1>Movie List</h1>
@@ -52,7 +53,7 @@ function App() {
           <p className={item.completed ? 'completed' : null}>
             {item.title}{item.genre}
           </p>
-          
+          <input type='checkbox' value={index}/>
           {
             item.completed ? (
               <button onClick={() => handleDeleteMovie(index)}>Delete</button>
