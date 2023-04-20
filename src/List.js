@@ -1,25 +1,39 @@
 import { useState } from "react"
-
+import './List.css'
 export default function List(props) {
+  const [editing, setEditing] = useState(false);
+  
 
-
-
+  function handleEditing() {
+    setEditing(true);
+  }
+  function handleUpdatedDone (event) {
+    if (event.key === 'Enter') {
+      setEditing(false);
+    }
+  };
 return(
-    <div>
+    <div className="list-container">
     {
-      props.movie.map((item, index) => (
-        <div key={index}>
-        <p className={item.completed ? 'completed' : null}>
-          {item.title}{item.genre}{item.imdbID}
-        </p>
-        
-        <input type='checkbox' onChange={() => props.handleCheck(item.imdbID)}/>
+      props.movie.map((item) => (
+        <div className="list-item" key={item.imdbID}>
+        {/* <p className={item.completed ? 'completed' : null}> */}
+        <h3>{item.title}</h3><button onClick={handleEditing}>Edit Title</button>
+        { editing && (<input
+          type="text"
+          value={item.title}
+          className='text-input'
+          onChange={(e) =>  props.updateTitle(e.target.value, item.imdbID)}
+          onKeyDown={handleUpdatedDone}
+        />)}
+        <p>Genre: {item.genre}</p>
+        <input type='checkbox' onChange={(e) => props.handleCheck(e, item.imdbID)}/>
         
         {
           item.completed ? (
-            <button onClick={() => props.handleDeleteMovies([item.imdbID])}>Delete</button>
+            <button onClick={() => props.handleWatched(item.imdb)}>Watched!</button>
           ) : (
-            <button onClick={() => props.handleCompleteMovie(index)}>Complete</button>
+            <button onClick={() => props.handleCompleteMovie(item.imdbID)}>Watch</button>
           )
         }
         

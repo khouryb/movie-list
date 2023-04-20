@@ -1,0 +1,20 @@
+.list-item {
+    width: 500px;
+    height: 200px;
+    margin: 10px;
+    border: 2px solid greenyellow;
+    background-color: red;
+}
+
+.list-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.text-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #dfdfdf;
+    outline: none;
+}
