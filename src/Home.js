@@ -1,6 +1,5 @@
 import {useState} from 'react'
 import List from './List';
-import Nav from './Nav';
 import './Home.css'
 
 export default function Home() {
@@ -122,7 +121,7 @@ export default function Home() {
 }
     return(
         <div className="home">
-            <Nav />
+           
         <h1>Movie List</h1>
         
         <button onClick={deleteSelected}>Delete Selected</button>

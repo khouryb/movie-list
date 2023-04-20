@@ -1,5 +1,6 @@
 .list-item {
-    width: 500px;
+    display: flex;
+    width: 450px;
     height: 200px;
     margin: 10px;
     border: 2px solid #0088a9;
@@ -23,10 +24,7 @@
     margin: 5px 0px 5px 0;
 }
 
-.list-item {
-    display: flex;
 
-}
 
 .left {
     width: 80%
