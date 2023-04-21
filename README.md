@@ -2,7 +2,7 @@
 
 ## Description
 
-The goal of this project was to create a noughts and crosses game. The playing board had to be displayed and allowed players to to place their icons and to switch turns between X and O, then visually display who won.
+The goal of this project was to make a React list app. One had to be able to add to the list from an API and manipulate the list in various ways (edit, delete, etc.).
 
 ## Deployment link
 
@@ -10,7 +10,7 @@ link: https://khouryb.github.io/movie-list
 
 ## Timeframe
 
-We were given 5 days to complete our app, working independently.
+We were given 4 days to complete our app, working independently.
 
 ## Technologies used
 
@@ -32,7 +32,8 @@ We were given 5 days to complete our app, working independently.
 
 ## User Stories
 
-
+- As a user, I want to be able to add to the list, so I can see my movies.
+- As a user, 
 
 ## Planning
 

@@ -28,7 +28,7 @@ return(
             className='text-input'
             onChange={(e) =>  props.updateTitle(e.target.value, item.imdbID)}
             onKeyDown={handleUpdatedDone}
-          />):<h3 className="h3-movie-title">{item.title}</h3>}
+          />):<h3 className="h3-movie-title" onClick={handleEditing}>{item.title}</h3>}
           <p>Genre: {item.genre}</p>
   
           
