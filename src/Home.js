@@ -44,7 +44,7 @@ export default function Home() {
   const handleSubmit = (e) => {
     e.preventDefault()
     
-      fetch(`http://omdbapi.com/?t=${newMovie}&apikey=80abee2e&`)
+      fetch(`https://omdbapi.com/?t=${newMovie}&apikey=80abee2e&`)
       .then((response) => response.json())
       .then((result) => setMovies([...movies, {title: result.Title, genre: result.Genre, imdbID: result.imdbID, completed: false}]))
     
