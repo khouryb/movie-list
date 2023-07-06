@@ -48,7 +48,6 @@ export default function Home() {
       .then((response) => response.json())
       .then((result) => setMovies([...movies, {title: result.Title, genre: result.Genre, imdbID: result.imdbID, completed: false}]))
     
-    
     setNewMovie('')
   }
 

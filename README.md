@@ -15,7 +15,7 @@ We were given 4 days to complete our app, working independently.
 ## Technologies used
 
 - React
-- JavaScript
+- CSS
 
 ## Brief
 
@@ -27,146 +27,157 @@ We were given 4 days to complete our app, working independently.
 - Clear/delete only marked items
 - Fetch data from at least one 3rd party API using Axios or fetch.
 - Make frequent Git commits with descriptive messages, explaining your commit.
- -Use React Router to handle multiple pages/views.
-
+- Use React Router to handle multiple pages/views.
 
 ## User Stories
 
-- As a user, I want to be able to add to the list, so I can see my movies.
-- As a user, 
+- As a user, I want to be able to add movies to the list from an API.
+- As a user, I want to be able to delete selected movies from my list.
+- As a user, I want to be able to delete all movies from my list
+- As a user, I want to be able to mark movies as seen on my list.
+- As a user, I want to be able to add my own movies to my list.
+- As a user, I want to be able to edit the title of my movie in line.
+- As a user, I want to be able to navigate through multiple pages.
 
 ## Planning
 
-In the planning phase of my project I decided to make a wireframe of what I wanted the page to look like:
+Having had some experience making a project already, I knew that I wanted to keep this project rather simple and have rock solid foundations that I would be able to build upon if I wanted to at a later date. As usual, I started the Project (which has the rather imaginative name of 'Movie List') with a wireframe:
 
-!(assets/wireframe.png)
+[IMAGE HERE]
 
-I knew I wanted a game board and an aside to display some information and maybe to let the user pick who's turn it is first.
-
-As per the advice of my tutors, I opted to approach the project in a more modular way; breaking it down into more bitesize chunks. After the wireframe I would then make sure I got a basic game working with only a little styling to show the board and player icons. Then after this I would focus on making the end product more visually pleasing and adding various other features to improve user experience.
+I wanted to keep the user interface simple and intuitive so I went with the classic React list style, adding new list items as divs centered in the page. Each list item should have various different options such as mark as watched, edit, etc. Then at the bottom where the lists are added there would be two inputs allowing the user to grab movies from an API or to add their own movies.
 
 ## Build Process
 
-First I went about implementing my initial wireframe. Just a box with squares and an aside and info bar that deisplayed user score and draws. My first hurdle was to allow a user to place Xs and Os inside a board whilst changing the icon after every turn. I took advantage of Bubbling to achieve this so I didn't have to attach event listeners to every square on the board.the function `boardEvent()` creates an array of the elements of the parent the user clicks on and returns an index of the square that they click on which is used with other logic to place an X or O on the board. This was something I used from a previous lab and I think I got a bit lucky on this step because it worked immedietely!
+This time around I did not focus on implementing my wireframe first, but to add at least some functionality then go about adding some CSS, then I would add some more functionality and implement the ideas I had in my wireframe along with CSS.
 
-```
-function boardEvent(e) {
-  // Create an array of all the children of the .board
-  if (gameActive === true) {
-    squareArray = Array.from(e.target.parentNode.children);
-    currentSelection = squareArray.indexOf(e.target);
+First I went about researching various APIs. The first one I looked at seemed like it had quite a long sign up process and they didn't send you your API key immediately, but with the second one I found, all I had to do was type in my email address and it was sent instantly, happy days! This API honestly was a dream to use, everything it returned to me was very readable and the documentation was was to understand. They even had a generator that, when you typed a movie in, gave you the parameters you need in an example URL.
 
-    // Allows the user to populate the board with x and o
-    populateBoard();
-    // checks for the winner after each click
-    checkWinner(arrayPlayerOne, arrayPlayerTwo);
-    checkTie();
-  }
-}
-```
+Now I set about retrieving data from the API. I built a <form> with a text input field where you enter the movie that you want to get from the API. I added a new useState to the component called newMovie which would track, using an onChange event listener, what the user typed into the field. Then on the form, I added an event listener (onSubmit) that would run a function that would grab the updated state of newMovie to fetch info from the API. Here's some code:
 
-The next step was to implement win and draw conditions. For now I would just `console.log()` these and would add html later to display a win or loss. I went about this by constructing an array of all the winning conditions on the board, called `winningCombinations` then I made two functions called `checkWinner()` and `checkTie()` that upon each placement of an X or O would check against an array that each player had to see if a win condition had been met.
+1. Form
 
-```
-function checkWinner(playerOneArray, playerTwoArray) {
-  for (let i = 0; i < winningCombinations.length; i++) {
-    if (
-      winningCombinations[i].every((array) => playerOneArray.includes(array))
-    ) {
-      gameHistory("X wins!");
-      playerOneBool = true;
-      playerOneScore++;
-      document.querySelector(".playerOne").innerHTML = playerOneScore;
-      endGame();
-    } else if (
-      winningCombinations[i].every((array) => playerTwoArray.includes(array))
-    ) {
-      gameHistory("O wins!");
-      playerTwoBool = true;
-      playerTwoScore++;
-      document.querySelector(".playerTwo").innerHTML = playerTwoScore;
-      endGame();
-    }
-  }
-}
-```
+ <form className='api-form' onSubmit={handleSubmit}>
+   <h3>Add Movie From Database</h3>
+   <input
+   type='text'
+   placeholder='Movie'
+   required
+   value={newMovie}
+   onChange={handleChange} />
+    <button type='submit'>Add Movie</button>
+ </form>
 
-The MVP was almost complete! Now I just had to display if a player had won. From the get go I knew I wanted to display a game history, so I decided to implement this at the same time. I made a function called `gameHistory(string)` which would prepend a `<ul>` to an `<li>` displaying who won or if it was a draw. It would then remove the last child of the list if the list items were over 6 so as not to clutter the display.
+2. function run onSubmit
 
-```
-function gameHistory(string) {
-  pElement = document.createElement("li");
-  pElement.innerHTML = string;
-  winHistory.prepend(pElement);
-  console.log(winHistory.childElementCount);
-  if (winHistory.childElementCount > 6) {
-    winHistory.removeChild(winHistory.lastChild);
-  }
+const handleSubmit = (e) => {
+e.preventDefault()
+
+    fetch(`https://omdbapi.com/?t=${newMovie}&apikey=80abee2e&`)
+    .then((response) => response.json())
+    .then((result) => setMovies([...movies, {title: result.Title, genre: result.Genre, imdbID: result.imdbID, completed: false}]))
+
+setNewMovie('')
 }
 
-// removes all child nodes for the game history
-function removeAllChildNodes(parent) {
-  while (parent.firstChild) {
-    parent.removeChild(parent.firstChild);
-  }
+With the API returning what we want (in this case I asked it to give us the title and genre) I can now focus on implementing other parts of the MVP, like adding a feature to allow a user to add their own movies. This is done much like allowing the user to make an API call but users just fill out a form with their own information. A new list item is generated by updating the State of [movies, setMovies], which is passed down as props to a child component called List.js which handles everything to do with the list as a whole and each list item. To make the list, I would map over the movies object in the list component, inserting the values of the props where needed in <h3> and <p> tags. Here is the code for that:
+
+   <div className="list-container">
+   {
+     props.movies.map((item) => (
+      
+       <div className="list-item" key={item.imdbID}>
+         <div className="left">
+        
+         {/* <p className={item.completed ? 'completed' : null}> */}
+        
+         { editing ? (<input
+           type="text"
+           value={item.title}
+           className='text-input'
+           onChange={(e) =>  props.updateTitle(e.target.value, item.imdbID)}
+           onKeyDown={handleUpdatedDone}
+         />):<h3 className="h3-movie-title" onClick={handleEditing}>{item.title}</h3>}
+         <p>Genre: {item.genre}</p>
+         
+          </div>
+         <div className="right">
+         <input className="checkbox" type='checkbox' onChange={(e) => props.handleCheck(e, item.imdbID)}/>
+           <button onClick={handleEditing}>Edit Title</button>
+
+           {
+         item.completed ? (
+           <button onClick={() => props.handleWatched(item.imdb)}>Watched!</button>
+         ) : (
+           <button onClick={() => props.handleCompleteMovie(item.imdbID)}>Watch</button>
+         )
+       }
+         </div>
+
+
+         </div>
+     ))
+
 }
-```
 
-With the MVP done and then some, I decided to improve the user experience by allowing to select who goes first using the `goesFirst(event)` function and to reset the game to it's original state. I'll highlight the `goesFirst(event)` first. First I targeted each of the buttons using an event listener (again, using bubbling), then I went about writing some logic that would choose the first player then disabled the buttons so that the player could not be switched mid game. Here is a code snippet:
+ </div>
 
-```
-function goesFirst(event) {
-  if (goesFirstButton === true) {
-    if (event.target.classList.contains("buttonX")) {
-      currentPlayer = players.playerOne;
-      gameActive = true;
-      goesFirstButton = false;
-      disableMenuButtons();
-    } else if (event.target.classList.contains("buttonO")) {
-      currentPlayer = players.playerTwo;
-      gameActive = true;
-      goesFirstButton = false;
-      disableMenuButtons();
-    }
-  }
+Each list item is split up into two "sides", one for displaying the content and another for various options; a checkbox to delete selected movies, a watched movie button and an edit title button.
+
+Next was to implement a delete all movies and a delete selected movies feature. Delete all movies was easy to implement, just reset the state of movies to an empty array.
+Deleting selected would be a lot more involved, I would need a few functions and states to handle this. First being a function that handles what list item is being checked. I called this handleCheck. This function sets an array in the checked state to what check box on what movie list item is currently checked:
+
+const handleCheck = (e, id) => {
+let checkedList = [...checked]
+if (!checked.includes(id)){
+checkedList = [...checked, id]}
+else{
+const index = checked.findIndex((imdbID) => imdbID === id)
+checkedList.splice(index, 1)
 }
-```
+setChecked(checkedList)
 
-Then it was onto the game reset button, I made a function called `resetValues()` which, when called, would reset everything on the board and all player scores etc. would be resetted. This was a callback function inside an event listener on the reset button. Here's another code snippet, enjoy!
-
-```
-function resetValues() {
-  playerOneScore = 0;
-  playerTwoScore = 0;
-  tieScore = 0;
-  goesFirstButton = true;
-  gameActive = false;
-  removeAllChildNodes(document.querySelector(".win-history"));
-  document.querySelector(".playerOne").innerHTML = "0";
-  document.querySelector(".playerTwo").innerHTML = "0";
-  document.querySelector(".tie").innerHTML = "0";
 }
-```
 
-## Challanges
+Next was to actually delete the selected items. The function for which is called deleteSelected. It takes all the movies currently in the movies array and filters the ones that are checked by comparing the IDs of the checked array. It then sets the state to the new array:
 
-I'm not going to lie, this project was a challange. After initially getting it off the ground in a more or less smooth manner I got stumped on the winning conditions function. I still hadn't gotten a grasp of the array methods and knew I wanted to use some so I could understand them better. Therefore I created an issue and got some help from one of our lovely tutors here at GA (bonus marks please). After maybe 15 minutes he set me in the right direction and I managed to overcome the challange I had with implementing this feature.
+const deleteSelected = () => {
+let newMovie = [...movies];
+newMovie = newMovie.filter((item) => !checked.includes(item.imdbID))
+setMovies(newMovie)
+setChecked([])
+}
 
-This is my first project, therefore I am well aware that my code isn't that DRY. I think because a lot of this is knew to me it can get quite overwhelming and you forget to use certain features or comment your code as you go, something which I'll be changing in the next project. But apart from that I found that whilst I did have some roadblocks, they were not that major and I would usually overcome them without much time lost.
+The last thing I would like to highlight is the addition of a way to edit the title (if you don't like it for some reason). I did this again through the use of a few functions and a new bit of state. I used a state called editing with an initial value of false. This state keeps track of if a user is or isn't editing because I use a ternary operator in the JSX to show either a <h3> or a text <input> like so:
+
+         { editing ? (<input
+           type="text"
+           value={item.title}
+           className='text-input'
+           onChange={(e) =>  props.updateTitle(e.target.value, item.imdbID)}
+           onKeyDown={handleUpdatedDone}
+         />):<h3 className="h3-movie-title" onClick={handleEditing}>{item.title}</h3>}
+
+Either on click of the <h3> element or onclick of a button elsewhere runs the function handleEditing() which shows the input box on the UI as the state of editing has been changed to true. the handleUpdateDone() function updates the state of the the title key in movies on on the list item being edited on each keystroke, which is set into stone and initialised on enter with the onKeyDown event listener using the function handleUpdatedDone().
+
+## Challenges
+
+I wouldn't say this project was easier than the first one, but I guess I'm getting used to coding in general. For example, whilst I found the concept of state difficult to get my head around initially, it became quite intuitive to work with by the end of the project and I think I picked it up quicker than I would have done at the start.
+
+Being more specific with the challenges I encountered during this project, I would say that implementing the ability to use checkmarks to delete selected items was a real hurdle, I had to get help from teachers a number of times. At the end of the second day I thought I had solved it by myself, but after some testing I had a bug that would just not go away. The solution to this was to give each movie item unique ids as I was just generating them from the key that the map() method gives you.
 
 ## Wins
 
-- I can honestly say that I am so proud of myself. A few weeks ago I wouldn't have thought that I'd be able to make anything close to this.
-- I feel like some of the content from this course are firmly lodged in my brain.
+- My general coding knowledge has definitely improved, I feel like I can solve problems quicker and new knowledge is easier to understand.
+  -I think how I implemented the editing feature of the MVP was quite slick.
+- I feel I've gotten better at using git and github.
 
 ## Key Takeaways
 
-Butter chicken, pilau rice and a garlic naan. But also to write my ReadMe as I go so I can include any pseudocode and to make it easier to remember my thinking at every step.
-My confidence with using HTML, javascript and CSS has grown. Building such a large project, instead of doing loads of small labs, has really taught me how to fend for myself and become more self sufficient.
+I can see React as being a useful and powerful tool used to make Apps quickly and efficiently. However it has downsides, like debugging for example as instructions aren't processed line by line it's sometimes difficult to use console logging.
 
 ## Future Improvements
 
-- Sounds, I really wanted to implement this as it seems easy to do.
-- A local save so that you can come back to play with the scores intact.
-- An option to switch colour themes for the board.
-- A computer AI.
+- Local storage
+- Splitting up the app into more components as this caused some minor bugs whilst editing.
+- Responsive design.
