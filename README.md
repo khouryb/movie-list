@@ -41,9 +41,7 @@ We were given 4 days to complete our app, working independently.
 
 ## Planning
 
-Having had some experience making a project already, I knew that I wanted to keep this project rather simple and have rock solid foundations that I would be able to build upon if I wanted to at a later date. As usual, I started the Project (which has the rather imaginative name of 'Movie List') with a wireframe:
-
-[IMAGE HERE]
+Having had some experience making a project already, I knew that I wanted to keep this project rather simple and have rock solid foundations that I would be able to build upon if I wanted to at a later date.
 
 I wanted to keep the user interface simple and intuitive so I went with the classic React list style, adding new list items as divs centered in the page. Each list item should have various different options such as mark as watched, edit, etc. Then at the bottom where the lists are added there would be two inputs allowing the user to grab movies from an API or to add their own movies.
 
@@ -55,7 +53,7 @@ First I went about researching various APIs. The first one I looked at seemed li
 
 Now I set about retrieving data from the API. I built a <form> with a text input field where you enter the movie that you want to get from the API. I added a new useState to the component called newMovie which would track, using an onChange event listener, what the user typed into the field. Then on the form, I added an event listener (onSubmit) that would run a function that would grab the updated state of newMovie to fetch info from the API. Here's some code:
 
-1. Form
+### Form
 
  <form className='api-form' onSubmit={handleSubmit}>
    <h3>Add Movie From Database</h3>
@@ -68,7 +66,7 @@ Now I set about retrieving data from the API. I built a <form> with a text input
     <button type='submit'>Add Movie</button>
  </form>
 
-2. function run onSubmit
+### function run onSubmit
 
 const handleSubmit = (e) => {
 e.preventDefault()
