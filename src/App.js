@@ -1,13 +1,8 @@
-
-import { Routes, Route, Link } from 'react-router-dom'
-import List from './List';
+import { Routes, Route } from 'react-router-dom'
 import Home from './Home';
 import About from './About';
 import "./App.css"
 import Nav from './Nav';
-
-
-
 
 function App() {
 

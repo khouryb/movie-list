@@ -46,7 +46,7 @@ export default function Home() {
     
       fetch(`https://omdbapi.com/?t=${newMovie}&apikey=80abee2e&`)
       .then((response) => response.json())
-      .then((result) => setMovies([...movies, {title: result.Title, genre: result.Genre, imdbID: result.imdbID, completed: false}]))
+      .then((result) => setMovies([...movies, {title: result.Title, genre: result.Genre, imdbID: result.imdbID, poster: result.Poster, completed: false}]))
     
     setNewMovie('')
   }
