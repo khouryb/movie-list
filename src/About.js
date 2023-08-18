@@ -2,7 +2,7 @@ export default function About() {
     return(
     <>
     <h1>About</h1>
-    <p>Use this app to create a list of movies that you want to watch!</p>
+    <p>Use this app to create a list of movies that you want to watch! Written in React.js and vanilla CSS.</p>
     </>
     )
 }

@@ -1,15 +1,11 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import List from './List';
 import './Home.css'
 
 export default function Home() {
-    // const initialMovie = useEffect(getInitialMovie())
 
-  // function getInitialMovie() {}
 
-  const [movies, setMovies] = useState([{
-    title: "Ben: The Movie", genre: "Horror", imdbID: null
-  }]);
+  const [movies, setMovies] = useState([]);
 
   const [newMovie, setNewMovie] = useState("")
 
@@ -21,8 +17,31 @@ export default function Home() {
 
   const [counter, setCounter] = useState(1)
 
+   
+useEffect(() => {
+  const setInitialMovies = async () => {
+    const titles = ['the terminator', 'pulp fiction', 'superbad'];
+    let titlesFromAPI = [];
 
+    for(let i=0; i<titles.length; i++) {
+      const response = await fetch(`https://omdbapi.com/?t=${titles[i]}&apikey=80abee2e&`);
+      const result = await response.json()
+      titlesFromAPI.push({
+        title: result.Title,
+        genre: result.Genre,
+        imdbID: result.imdbID,
+        released: result.Released,
+        director: result.Director,
+        actors: result.Actors,
+        poster: result.Poster,
+        completed: false})
+    };
+    setMovies(titlesFromAPI);
+  };
+  setInitialMovies();
+}, [])
 
+  
 
   const handleCheck = (e, id) => {
     let checkedList = [...checked]
