@@ -46,7 +46,15 @@ export default function Home() {
     
       fetch(`https://omdbapi.com/?t=${newMovie}&apikey=80abee2e&`)
       .then((response) => response.json())
-      .then((result) => setMovies([...movies, {title: result.Title, genre: result.Genre, imdbID: result.imdbID, poster: result.Poster, completed: false}]))
+      .then((result) => setMovies([...movies, {
+        title: result.Title,
+        genre: result.Genre,
+        imdbID: result.imdbID,
+        released: result.Released,
+        director: result.Director,
+        actors: result.Actors,
+        poster: result.Poster,
+        completed: false}]))
     
     setNewMovie('')
   }
@@ -125,7 +133,12 @@ export default function Home() {
         
         <button onClick={deleteSelected}>Delete Selected</button>
         <button onClick={deleteAll}>Delete All</button>
-        <List movies={movies}  handleCompleteMovie={handleCompleteMovie} handleCheck={handleCheck} updateTitle={updateTitle} handleWatched={handleWatched}/>
+        <List
+          movies={movies}
+          handleCompleteMovie={handleCompleteMovie}
+          handleCheck={handleCheck}
+          updateTitle={updateTitle}
+          handleWatched={handleWatched}/>
       <form className='api-form' onSubmit={handleSubmit}>
         <h3>Add Movie From Database</h3>
         <input

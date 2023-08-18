@@ -6,7 +6,12 @@ export default function List(props) {
     <div className="list-container">
     {
       props.movies.map((item) => (
-        <ListItem key={item.imdbID} handleCompleteMovie={props.handleCompleteMovie} handleWatched={props.handleWatched} handleCheck={props.handleCheck} item={item} />
+        <ListItem
+          key={item.imdbID}
+          handleCompleteMovie={props.handleCompleteMovie}
+          handleWatched={props.handleWatched}
+          handleCheck={props.handleCheck}
+          item={item} />
       ))
     }
   </div>

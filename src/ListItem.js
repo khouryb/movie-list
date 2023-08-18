@@ -28,8 +28,10 @@ export default function ListItem(props) {
               onKeyDown={handleUpdatedDone}
             />) : <h3 className="h3-movie-title" onClick={handleEditing}>{props.item.title}</h3>}
             <p>Genre: {props.item.genre}</p>
+            <p>Release Date: {props.item.released}</p>
+            <p>Director: {props.item.director}</p>
+            <p>Starring: {props.item.actors}</p>
           </div>
-        
         </div>
 
       <div className="right">
