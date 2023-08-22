@@ -10,36 +10,38 @@ export default function Home() {
   });
   const [checked, setChecked] = useState([]);
   const [counter, setCounter] = useState(1);
-
    
-useEffect(() => {
+  useEffect(() => {
+    let pageLoaded = localStorage.getItem('pageLoaded')
 
-  
-  const setInitialMovies = async () => {
-  const titles = ['the terminator', 'pulp fiction', 'superbad'];
-  let titlesFromAPI = [];
+    if(pageLoaded !== 'true') {
+      const setInitialMovies = async () => {
+      const titles = ['the terminator', 'pulp fiction', 'superbad'];
+      let titlesFromAPI = [];
 
-  for(let i=0; i<titles.length; i++) {
-    const response = await fetch(`https://omdbapi.com/?t=${titles[i]}&apikey=80abee2e&`);
-    const result = await response.json()
-    titlesFromAPI.push({
-      title: result.Title,
-      genre: result.Genre,
-      imdbID: result.imdbID,
-      released: result.Released,
-      director: result.Director,
-      actors: result.Actors,
-      poster: result.Poster,
-      completed: false})
-  };
-  setMovies(titlesFromAPI);
-  localStorage.setItem('initialData', JSON.stringify(titlesFromAPI));
-  };
-  setInitialMovies();
+      for(let i=0; i<titles.length; i++) {
+        const response = await fetch(`https://omdbapi.com/?t=${titles[i]}&apikey=80abee2e&`);
+        const result = await response.json()
+        titlesFromAPI.push({
+          title: result.Title,
+          genre: result.Genre,
+          imdbID: result.imdbID,
+          released: result.Released,
+          director: result.Director,
+          actors: result.Actors,
+          poster: result.Poster,
+          completed: false})
+      };
+      setMovies(titlesFromAPI);
+      localStorage.setItem('initialData', JSON.stringify(titlesFromAPI));
+      localStorage.setItem('pageLoaded', true);
+      };
+      setInitialMovies();
+    } else {
+      setMovies(JSON.parse(localStorage.getItem('initialData')))
+    }
 
-}, [])
-
-  
+  }, [])
 
   const handleCheck = (e, id) => {
     let checkedList = [...checked]
@@ -53,7 +55,6 @@ useEffect(() => {
       
   }
 
-
   const handleChange = (e) => {
     setNewMovie(e.target.value)
   }
@@ -61,19 +62,22 @@ useEffect(() => {
   const handleSubmit = (e) => {
     e.preventDefault()
     
-      fetch(`https://omdbapi.com/?t=${newMovie}&apikey=80abee2e&`)
-      .then((response) => response.json())
-      .then((result) => setMovies([...movies, {
-        title: result.Title,
-        genre: result.Genre,
-        imdbID: result.imdbID,
-        released: result.Released,
-        director: result.Director,
-        actors: result.Actors,
-        poster: result.Poster,
-        completed: false}]))
+    fetch(`https://omdbapi.com/?t=${newMovie}&apikey=80abee2e&`)
+    .then((response) => response.json())
+    .then((result) => setMovies([...movies, {
+      title: result.Title,
+      genre: result.Genre,
+      imdbID: result.imdbID,
+      released: result.Released,
+      director: result.Director,
+      actors: result.Actors,
+      poster: result.Poster,
+      completed: false}]))
     
     setNewMovie('')
+    
+    localStorage.setItem('initialData', JSON.stringify(movies))
+    console.log(JSON.stringify(movies))
   }
 
   const handleUserChange = (e) => {
