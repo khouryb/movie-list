@@ -3,42 +3,40 @@ import List from './List';
 import './Home.css'
 
 export default function Home() {
-
-
   const [movies, setMovies] = useState([]);
-
-  const [newMovie, setNewMovie] = useState("")
-
+  const [newMovie, setNewMovie] = useState("");
   const [newUserMovie, setNewUserMovie] = useState({
     title: "", genre: "", imdbID: null
-  })
-
-  const [checked, setChecked] = useState([])
-
-  const [counter, setCounter] = useState(1)
+  });
+  const [checked, setChecked] = useState([]);
+  const [counter, setCounter] = useState(1);
 
    
 useEffect(() => {
-  const setInitialMovies = async () => {
-    const titles = ['the terminator', 'pulp fiction', 'superbad'];
-    let titlesFromAPI = [];
 
-    for(let i=0; i<titles.length; i++) {
-      const response = await fetch(`https://omdbapi.com/?t=${titles[i]}&apikey=80abee2e&`);
-      const result = await response.json()
-      titlesFromAPI.push({
-        title: result.Title,
-        genre: result.Genre,
-        imdbID: result.imdbID,
-        released: result.Released,
-        director: result.Director,
-        actors: result.Actors,
-        poster: result.Poster,
-        completed: false})
-    };
-    setMovies(titlesFromAPI);
+  
+  const setInitialMovies = async () => {
+  const titles = ['the terminator', 'pulp fiction', 'superbad'];
+  let titlesFromAPI = [];
+
+  for(let i=0; i<titles.length; i++) {
+    const response = await fetch(`https://omdbapi.com/?t=${titles[i]}&apikey=80abee2e&`);
+    const result = await response.json()
+    titlesFromAPI.push({
+      title: result.Title,
+      genre: result.Genre,
+      imdbID: result.imdbID,
+      released: result.Released,
+      director: result.Director,
+      actors: result.Actors,
+      poster: result.Poster,
+      completed: false})
+  };
+  setMovies(titlesFromAPI);
+  localStorage.setItem('initialData', JSON.stringify(titlesFromAPI));
   };
   setInitialMovies();
+
 }, [])
 
   
