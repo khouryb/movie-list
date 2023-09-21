@@ -2,17 +2,19 @@ import { useState, useEffect } from "react";
 import List from "./List";
 import SearchBar from "./SearchBar";
 import "./Home.css";
+import Box from "./Box";
+import MovieResults from "./MovieResults";
 
 export default function Home() {
   const [movies, setMovies] = useState([]);
-  const [newMovie, setNewMovie] = useState("");
-  const [newUserMovie, setNewUserMovie] = useState({
-    title: "",
-    genre: "",
-    imdbID: null,
-  });
+  const [query, setQuery] = useState("");
+  // const [newUserMovie, setNewUserMovie] = useState({
+  //   title: "",
+  //   genre: "",
+  //   imdbID: null,
+  // });
   const [checked, setChecked] = useState([]);
-  const [counter, setCounter] = useState(1);
+  // const [counter, setCounter] = useState(1);
 
   useEffect(() => {
     let pageLoaded = localStorage.getItem("pageLoaded");
@@ -59,69 +61,76 @@ export default function Home() {
     setChecked(checkedList);
   };
 
-  const handleChange = (e) => {
-    setNewMovie(e.target.value);
-  };
-
-  const handleSubmit = (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
 
-    fetch(`https://omdbapi.com/?t=${newMovie}&apikey=80abee2e&`)
-      .then((response) => response.json())
-      .then((result) => {
-        setMovies([
-          ...movies,
-          {
-            title: result.Title,
-            genre: result.Genre,
-            imdbID: result.imdbID,
-            released: result.Released,
-            director: result.Director,
-            actors: result.Actors,
-            poster: result.Poster,
-            completed: false,
-          },
-        ]);
+    const response = await fetch(
+      `https://omdbapi.com/?s=${query}&apikey=80abee2e&`
+    );
+    const results = await response.json();
+    console.log(results);
+    setMovies(results.Search);
+  }
 
-        localStorage.setItem(
-          "initialData",
-          JSON.stringify([
-            ...movies,
-            {
-              title: result.Title,
-              genre: result.Genre,
-              imdbID: result.imdbID,
-              released: result.Released,
-              director: result.Director,
-              actors: result.Actors,
-              poster: result.Poster,
-              completed: false,
-            },
-          ])
-        );
-      });
-    localStorage.setItem("data", movies);
-    setNewMovie("");
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
 
-    console.log(JSON.stringify(movies));
-  };
+  //   fetch(`https://omdbapi.com/?t=${query}&apikey=80abee2e&`)
+  //     .then((response) => response.json())
+  //     .then((result) => {
+  //       setMovies([
+  //         ...movies,
+  //         {
+  //           title: result.Title,
+  //           genre: result.Genre,
+  //           imdbID: result.imdbID,
+  //           released: result.Released,
+  //           director: result.Director,
+  //           actors: result.Actors,
+  //           poster: result.Poster,
+  //           completed: false,
+  //         },
+  //       ]);
 
-  const handleUserChange = (e) => {
-    const { name, value } = e.target;
-    setNewUserMovie((prev) => {
-      return { ...prev, [name]: value };
-    });
-  };
+  //       localStorage.setItem(
+  //         "initialData",
+  //         JSON.stringify([
+  //           ...movies,
+  //           {
+  //             title: result.Title,
+  //             genre: result.Genre,
+  //             imdbID: result.imdbID,
+  //             released: result.Released,
+  //             director: result.Director,
+  //             actors: result.Actors,
+  //             poster: result.Poster,
+  //             completed: false,
+  //           },
+  //         ])
+  //       );
+  //     });
+  //   localStorage.setItem("data", movies);
+  //   setQuery("");
 
-  const handleUserSubmit = (e) => {
-    e.preventDefault();
-    console.log(newUserMovie.title);
-    setMovies([
-      ...movies,
-      { title: newUserMovie.title, genre: newUserMovie.genre, imdbID: counter },
-    ]);
-    setCounter(counter + 1);
-  };
+  //   console.log(JSON.stringify(movies));
+  // };
+
+  // const handleUserChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setNewUserMovie((prev) => {
+  //     return { ...prev, [name]: value };
+  //   });
+  // };
+
+  // const handleUserSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log(newUserMovie.title);
+  //   setMovies([
+  //     ...movies,
+  //     { title: newUserMovie.title, genre: newUserMovie.genre, imdbID: counter },
+  //   ]);
+  //   setCounter(counter + 1);
+  // };
 
   const handleCompleteMovie = (id) => {
     setMovies(
@@ -176,6 +185,8 @@ export default function Home() {
 
       <button onClick={deleteSelected}>Delete Selected</button>
       <button onClick={deleteAll}>Delete All</button>
+      <Box>{MovieResults}</Box>
+      <Box>Box 2</Box>
       <List
         movies={movies}
         handleCompleteMovie={handleCompleteMovie}
@@ -189,13 +200,13 @@ export default function Home() {
           type="text"
           placeholder="Movie"
           required
-          value={newMovie}
-          onChange={handleChange}
+          value={query}
+          onChange={(e) => setQuery(e.value)}
         />
 
         <button type="submit">Add Movie</button>
       </form>
-      <form className="user-form" onSubmit={handleUserSubmit}>
+      {/* <form className="user-form" onSubmit={handleUserSubmit}>
         <h3>Add Your Own Movie</h3>
         <input
           type="text"
@@ -217,7 +228,7 @@ export default function Home() {
         <br />
 
         <button type="submit">Add User Movie</button>
-      </form>
+      </form> */}
     </div>
   );
 }
